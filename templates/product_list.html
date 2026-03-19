@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Products – Aquento{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <h1 class="mb-4">Products</h1>
+
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-sm-8 col-md-6">
+            <input type="text"
+                   name="q"
+                   class="form-control"
+                   placeholder="Search by model or product name"
+                   value="{{ query }}">
+        </div>
+        <div class="col-sm-4 col-md-2">
+            <button type="submit" class="btn btn-aquento w-100">Search</button>
+        </div>
+    </form>
+
+    {% if products %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if product.image %}
+                <img src="{{ product.image.url }}"
+                     class="card-img-top product-card-img"
+                     alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ product.name }}</h5>
+
+                    {% if product.short_description %}
+                    <p class="card-text">{{ product.short_description }}</p>
+                    {% endif %}
+
+                    {% if product.compatible_models %}
+                    <p class="text-muted small mb-2">
+                        Compatible: {{ product.compatible_models }}
+                    </p>
+                    {% endif %}
+
+                    <div class="mt-auto d-flex flex-wrap gap-2">
+                        <a href="{% url 'product_detail' product.slug %}"
+                           class="btn btn-sm btn-aquento">
+                            View details
+                        </a>
+                        {% if product.amazon_url %}
+                        <a href="{{ product.amazon_url }}"
+                           target="_blank"
+                           rel="noopener nofollow"
+                           class="btn btn-sm btn-aquento-outline">
+                            Buy on Amazon
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No products found.</p>
+    {% endif %}
+</div>
+{% endblock %}

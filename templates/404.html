@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found – Aquento{% endblock %}
+
+{% block content %}
+<div class="content-container text-center">
+    <h1 class="mb-3">Page not found</h1>
+    <p class="mb-4">
+        The page you are looking for does not exist or has been moved.
+    </p>
+    <a href="{% url 'home' %}" class="btn btn-aquento">Back to home</a>
+</div>
+{% endblock %}

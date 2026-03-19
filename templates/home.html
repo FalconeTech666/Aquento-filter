@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Home – Aquento Water Filters{% endblock %}
+
+{% block content %}
+
+{% if slides %}
+<section class="home-slider-section">
+    <div class="container">
+        <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="home-slider-card">
+                <div class="carousel-inner">
+                    {% for slide in slides %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <div class="home-slider-text home-slider-animated">
+                                    {% if slide.badge_text %}
+                                    <div class="home-slider-badge">
+                                        {{ slide.badge_text }}
+                                    </div>
+                                    {% endif %}
+
+                                    {% if slide.title %}
+                                    <h2 class="home-slider-title">
+                                        {{ slide.title }}
+                                    </h2>
+                                    {% endif %}
+
+                                    {% if slide.subtitle %}
+                                    <p class="home-slider-subtitle">
+                                        {{ slide.subtitle }}
+                                    </p>
+                                    {% endif %}
+
+                                    {% if slide.bullet_1 or slide.bullet_2 or slide.bullet_3 %}
+                                    <ul class="home-slider-bullets">
+                                        {% if slide.bullet_1 %}
+                                        <li>{{ slide.bullet_1 }}</li>
+                                        {% endif %}
+                                        {% if slide.bullet_2 %}
+                                        <li>{{ slide.bullet_2 }}</li>
+                                        {% endif %}
+                                        {% if slide.bullet_3 %}
+                                        <li>{{ slide.bullet_3 }}</li>
+                                        {% endif %}
+                                    </ul>
+                                    {% endif %}
+
+                                    {% if slide.button_text %}
+                                        {% if slide.button_url %}
+                                            <a href="{{ slide.button_url }}"
+                                               class="btn btn-aquento home-slider-btn">
+                                                {{ slide.button_text }}
+                                            </a>
+                                        {% elif slide.product %}
+                                            <a href="{% url 'product_detail' slide.product.slug %}"
+                                               class="btn btn-aquento home-slider-btn">
+                                                {{ slide.button_text }}
+                                            </a>
+                                        {% elif slide.news %}
+                                            <a href="{% url 'news_detail' slide.news.slug %}"
+                                               class="btn btn-aquento home-slider-btn">
+                                                {{ slide.button_text }}
+                                            </a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-6 d-none d-md-flex justify-content-end">
+                                <div class="home-slider-image-wrapper">
+                                    {% if slide.image %}
+                                    <img src="{{ slide.image.url }}"
+                                         alt="{{ slide.title }}"
+                                         class="home-slider-image">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="home-slider-control prev" type="button"
+                        data-bs-target="#homeCarousel" data-bs-slide="prev">
+                    <span class="home-slider-arrow">&larr;</span>
+                </button>
+                <button class="home-slider-control next" type="button"
+                        data-bs-target="#homeCarousel" data-bs-slide="next">
+                    <span class="home-slider-arrow">&rarr;</span>
+                </button>
+            </div>
+
+            <div class="home-slider-indicators">
+                {% for slide in slides %}
+                <button type="button"
+                        data-bs-target="#homeCarousel"
+                        data-bs-slide-to="{{ forloop.counter0 }}"
+                        class="{% if forloop.first %}active{% endif %}"></button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="home-intro-section">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+            <div class="col-lg-6">
+                <h1 class="home-intro-title">
+                    Premium water filtration,<br>
+                    made simple.
+                </h1>
+                <p class="home-intro-text">
+                    Aquento replacement filters deliver clean, fresh-tasting water
+                    for leading refrigerator brands – with easy installation and reliable performance.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'product_list' %}" class="btn btn-aquento btn-lg">
+                        View products
+                    </a>
+                    <a href="{% url 'instructions' %}" class="btn btn-link home-intro-link">
+                        Installation guides
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="home-intro-card">
+                    <h3>Why customers choose Aquento</h3>
+                    <ul>
+                        <li>OEM‑level compatibility with popular refrigerator models.</li>
+                        <li>Advanced filtration reducing chlorine, taste and odor.</li>
+                        <li>Clear documentation and responsive support.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="home-features-section">
+    <div class="container">
+        <div class="home-section-header">
+            <h2>Built for everyday use</h2>
+            <p>Everything you expect from a premium water filter, without the premium price tag.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3>🌊 Fresher tasting water</h3>
+                    <p>Advanced filtration technology removes impurities and improves taste.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3>🛡️ Reduces chlorine</h3>
+                    <p>Helps reduce chlorine taste and odor for consistently clean, refreshing water.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3>✅ Easy installation</h3>
+                    <p>Simple twist‑and‑lock design that fits compatible refrigerator models.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if latest_news %}
+<section class="home-news-section">
+    <div class="container">
+        <div class="home-section-header">
+            <h2>Latest news</h2>
+            <p>Updates from the Aquento team.</p>
+        </div>
+        <div class="row g-4">
+            {% for news in latest_news %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 home-news-card">
+                    {% if news.image %}
+                    <img src="{{ news.image.url }}" class="card-img-top news-card-img" alt="{{ news.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <p class="home-news-date">
+                            {{ news.published_at|date:"F d, Y" }}
+                        </p>
+                        <h5 class="card-title">{{ news.title }}</h5>
+                        <p class="card-text">{{ news.content|truncatewords:20 }}</p>
+                        <a href="{% url 'news_detail' news.slug %}" class="home-news-link">
+                            Read more →
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

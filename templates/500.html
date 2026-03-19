@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Server error – Aquento{% endblock %}
+
+{% block content %}
+<div class="content-container text-center">
+    <h1 class="mb-3">Something went wrong</h1>
+    <p class="mb-4">
+        We are working to fix this issue. Please try again later.
+    </p>
+    <a href="{% url 'home' %}" class="btn btn-aquento">Back to home</a>
+</div>
+{% endblock %}

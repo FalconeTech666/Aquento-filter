@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}My account – Aquento{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="row g-4">
+
+        <!-- Левая колонка: профиль + список запросов -->
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Profile</h2>
+                    <p class="mb-1"><strong>Username:</strong> {{ profile_user.username }}</p>
+                    {% if profile_user.email %}
+                        <p class="mb-1"><strong>Email:</strong> {{ profile_user.email }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h5 mb-0">Support requests</h2>
+                <a href="{% url 'support_new_thread' %}" class="btn btn-sm btn-aquento">
+                    New request
+                </a>
+            </div>
+
+            {% if threads %}
+            <div class="list-group">
+                {% for t in threads %}
+                <a href="{% url 'account_dashboard' %}?thread={{ t.id }}"
+                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-start
+                          {% if current_thread and current_thread.id == t.id %}active{% endif %}">
+                    <div class="me-2">
+                        <div class="fw-semibold">#{{ t.id }} – {{ t.subject|truncatechars:40 }}</div>
+                        <div class="small">
+                            {{ t.updated_at|date:"Y-m-d H:i" }}
+                        </div>
+                    </div>
+                    <span class="badge
+                          {% if t.status == 'open' %}badge-status-open{% else %}badge-status-closed{% endif %}">
+                        {{ t.get_status_display }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p class="text-muted">You have no support requests yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Правая колонка: чат текущего треда -->
+        <div class="col-md-8">
+            {% include "support/_chat_panel.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

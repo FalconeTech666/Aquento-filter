@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if page and page.seo_title %}
+    {{ page.seo_title }} – Aquento
+{% elif page %}
+    {{ page.title }} – Aquento
+{% else %}
+    Production – Aquento
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+{% if page and page.seo_description %}
+<meta name="description" content="{{ page.seo_description }}">
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <h1 class="mb-4">
+        {% if page %}
+            {{ page.title }}
+        {% else %}
+            Production
+        {% endif %}
+    </h1>
+
+    {% if page and page.content %}
+    <div class="mb-4">
+        {{ page.content|linebreaks }}
+    </div>
+    {% endif %}
+
+    {% if photos %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for photo in photos %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if photo.image %}
+                <img src="{{ photo.image.url }}"
+                     class="card-img-top production-card-img"
+                     alt="{{ photo.title }}">
+                {% endif %}
+                <div class="card-body">
+                    {% if photo.title %}
+                    <h5 class="card-title">{{ photo.title }}</h5>
+                    {% endif %}
+                    {% if photo.description %}
+                    <p class="card-text">{{ photo.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

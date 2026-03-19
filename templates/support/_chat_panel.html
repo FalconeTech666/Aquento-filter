@@ -1,0 +1,47 @@
+<div class="support-thread">
+    {% if current_thread %}
+        <h2 class="h5 mb-2">Support request #{{ current_thread.id }}</h2>
+        <p class="text-muted mb-3">
+            {{ current_thread.subject }}
+            · Status:
+            <span class="badge {% if current_thread.status == 'open' %}badge-status-open{% else %}badge-status-closed{% endif %}">
+                {{ current_thread.get_status_display }}
+            </span>
+        </p>
+
+        <div class="chat-window mb-3">
+            {% for m in current_messages %}
+            <div class="chat-message {% if m.is_staff_reply %}chat-admin{% else %}chat-user{% endif %}">
+                <div class="chat-meta">
+                    {% if m.is_staff_reply %}
+                        <strong>Support</strong>
+                    {% else %}
+                        <strong>You</strong>
+                    {% endif %}
+                    <span class="text-muted small">{{ m.created_at|date:"Y-m-d H:i" }}</span>
+                </div>
+                <div class="chat-text">
+                    {{ m.text|linebreaks }}
+                </div>
+            </div>
+            {% empty %}
+            <p>No messages yet.</p>
+            {% endfor %}
+        </div>
+
+        {% if current_thread.status == "open" %}
+        <form method="post" action="{% url 'support_thread_detail' current_thread.id %}" class="mt-3">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Your message</label>
+                <textarea name="text" rows="3" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-aquento">Send</button>
+        </form>
+        {% else %}
+        <p class="text-muted mt-3">This request is closed.</p>
+        {% endif %}
+    {% else %}
+        <p class="text-muted">You have no support requests yet. Click “New support request” to contact us.</p>
+    {% endif %}
+</div>

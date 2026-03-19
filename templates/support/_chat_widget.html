@@ -1,0 +1,17 @@
+{# templates/support/_chat_widget.html #}
+{% if current_thread %}
+    {% with thread=current_thread messages=current_messages %}
+        {% include "support/_chat_widget_inner.html" %}
+    {% endwith %}
+{% elif global_support_thread %}
+    {% with thread=global_support_thread messages=global_support_messages %}
+        {% include "support/_chat_widget_inner.html" %}
+    {% endwith %}
+{% else %}
+    <div class="support-thread">
+        <p class="text-muted small mb-0">
+            You have no support requests yet.<br>
+            Go to <a href="{% url 'account_dashboard' %}">My account</a> to create one.
+        </p>
+    </div>
+{% endif %}

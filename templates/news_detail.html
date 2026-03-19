@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if news.seo_title %}
+    {{ news.seo_title }} – Aquento
+{% else %}
+    {{ news.title }} – News – Aquento
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+{% if news.seo_description %}
+<meta name="description" content="{{ news.seo_description }}">
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <a href="{% url 'news_list' %}" class="btn btn-link mb-3">&larr; Back to news</a>
+
+    <h1 class="mb-2">{{ news.title }}</h1>
+    <p class="text-muted mb-3">{{ news.published_at|date:"F d, Y" }}</p>
+
+    {% if news.image %}
+    <div class="mb-4">
+        <img src="{{ news.image.url }}"
+             alt="{{ news.title }}"
+             class="img-fluid rounded shadow-sm"
+             style="max-height: 400px; object-fit: cover; object-position: center; width: 100%;">
+    </div>
+    {% endif %}
+
+    <div>
+        {{ news.content|linebreaks }}
+    </div>
+</div>
+{% endblock %}

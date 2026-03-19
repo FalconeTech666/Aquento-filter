@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if page and page.seo_title %}
+    {{ page.seo_title }} – Aquento
+{% elif page %}
+    {{ page.title }} – Aquento
+{% else %}
+    Contacts – Aquento
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+{% if page and page.seo_description %}
+<meta name="description" content="{{ page.seo_description }}">
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <h1 class="mb-4">
+        {% if page %}
+            {{ page.title }}
+        {% else %}
+            Contacts
+        {% endif %}
+    </h1>
+
+    {% if page and page.content %}
+    <div class="mb-4">
+        {{ page.content|linebreaks }}
+    </div>
+    {% else %}
+    <p>Contact information is not set yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

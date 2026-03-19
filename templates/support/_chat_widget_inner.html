@@ -1,0 +1,41 @@
+{# templates/support/_chat_widget_inner.html #}
+<div class="support-thread">
+    <div class="chat-window mb-2 chat-window-widget">
+        {% for m in messages %}
+        <div class="chat-message {% if m.is_staff_reply %}chat-admin{% else %}chat-user{% endif %}">
+            <div class="chat-meta">
+                {% if m.is_staff_reply %}
+                    <strong>Support</strong>
+                {% else %}
+                    <strong>You</strong>
+                {% endif %}
+                <span class="text-muted small">{{ m.created_at|date:"H:i" }}</span>
+            </div>
+            <div class="chat-text">
+                {{ m.text|linebreaks }}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted small mb-0">No messages yet.</p>
+        {% endfor %}
+    </div>
+
+    {% if thread.status == "open" %}
+    <form method="post"
+          action="{% url 'support_thread_detail' thread.id %}"
+          class="mt-1">
+        {% csrf_token %}
+        <div class="mb-2">
+            <textarea name="text" rows="2" class="form-control" required
+                      placeholder="Type your message..."></textarea>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-sm btn-aquento px-3">
+                Send
+            </button>
+        </div>
+    </form>
+    {% else %}
+    <p class="text-muted small mt-2 mb-0">This request is closed.</p>
+    {% endif %}
+</div>

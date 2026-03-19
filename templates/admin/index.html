@@ -1,0 +1,33 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+<div id="content-main">
+    <div class="module">
+        <h2>Project overview</h2>
+        <div class="dashboard-stats">
+            <ul>
+                <li><strong>Products:</strong> {{ stats.products_active }} active</li>
+                <li><strong>Instructions:</strong> {{ stats.instructions_active }} active</li>
+                <li><strong>News:</strong> {{ stats.news_published }} published</li>
+                <li><strong>Pages:</strong> {{ stats.pages_active }} active</li>
+                <li><strong>Open support threads:</strong> {{ stats.threads_open }}</li>
+            </ul>
+        </div>
+
+        {% if latest_threads %}
+        <h3>Latest support threads</h3>
+        <ul>
+            {% for t in latest_threads %}
+            <li>
+                <a href="{% url 'admin:core_supportthread_change' t.id %}">
+                    #{{ t.id }} – {{ t.subject }} ({{ t.user }}) – {{ t.get_status_display }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    {{ block.super }}
+</div>
+{% endblock %}

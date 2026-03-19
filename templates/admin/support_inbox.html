@@ -1,0 +1,326 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Support chats | {{ site_title }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a>
+    &rsaquo; Support chats
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main" class="module support-inbox-module">
+
+    <div class="support-inbox-header">
+    </div>
+
+    <div class="support-inbox-container">
+        <!-- Левая колонка: список чатов -->
+        <div class="support-inbox-list">
+            {% if threads %}
+                <ul class="support-inbox-threads">
+                    {% for t in threads %}
+                    <li class="support-inbox-thread-item {% if current_thread and current_thread.id == t.id %}active{% endif %}">
+                        <a href="{% url 'admin:support_inbox_thread' t.id %}">
+                            <div class="support-inbox-thread-user">
+                                {{ t.user.username }}
+                                {% if t.user.email %}
+                                    <span class="email">&lt;{{ t.user.email }}&gt;</span>
+                                {% endif %}
+                            </div>
+                            <div class="support-inbox-thread-last">
+                                {% if t.last_message %}
+                                    {% if t.last_message.is_staff_reply %}
+                                        <strong>Admin:</strong>
+                                    {% else %}
+                                        <strong>User:</strong>
+                                    {% endif %}
+                                    {{ t.last_message.text|truncatechars:60 }}
+                                {% else %}
+                                    <span class="text-muted">No messages yet</span>
+                                {% endif %}
+                            </div>
+                            <div class="support-inbox-thread-meta">
+                                <span class="status {{ t.status }}">
+                                    {{ t.get_status_display }}
+                                </span>
+                                <span class="time">
+                                    {{ t.updated_at|date:"Y-m-d H:i" }}
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No support chats yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Правая колонка: переписка -->
+        <div class="support-inbox-chat">
+            {% if current_thread %}
+                <div class="support-inbox-chat-header">
+                    <div>
+                        <h2>Chat with {{ current_thread.user.username }}</h2>
+                        {% if current_thread.user.email %}
+                        <div class="small text-muted">{{ current_thread.user.email }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <span class="status-pill {{ current_thread.status }}">
+                            {{ current_thread.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="support-inbox-chat-messages">
+                    {% for m in messages %}
+                    <div class="chat-message-line {% if m.is_staff_reply %}from-admin{% else %}from-user{% endif %}">
+                        <div class="chat-bubble">
+                            <div class="chat-meta">
+                                {% if m.is_staff_reply %}
+                                    <strong>Admin</strong>
+                                {% else %}
+                                    <strong>{{ current_thread.user.username }}</strong>
+                                {% endif %}
+                                <span class="time">{{ m.created_at|date:"Y-m-d H:i" }}</span>
+                            </div>
+                            <div class="chat-text">
+                                {{ m.text|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No messages yet.</p>
+                    {% endfor %}
+                </div>
+
+                <div class="support-inbox-chat-form">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <textarea name="text" rows="3" required placeholder="Type your reply here..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="default">
+                                Send reply
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% else %}
+                <p>Select a chat from the list on the left.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+/* Спрячем стандартные голубые сообщения Django admin на этой странице */
+.support-inbox-module + .messagelist,
+.messagelist {
+    display: none;
+}
+
+/* Общий контейнер */
+.support-inbox-module {
+    background: #f8f9fb;
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.support-inbox-header {
+    margin-bottom: 0.5rem;
+}
+
+/* Двухколоночный layout */
+.support-inbox-container {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* Левая колонка: список чатов */
+.support-inbox-list {
+    flex: 0 0 28%;
+    max-width: 28%;
+    border-right: 1px solid #ddd;
+    padding-right: 0.5rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.support-inbox-chat {
+    flex: 1;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 4px;
+    padding: 0.75rem;
+    border: 1px solid #e3e3e3;
+}
+
+.support-inbox-threads {
+    list-style: none;
+    padding: 0.4rem;
+    margin: 0;
+}
+
+.support-inbox-thread-item {
+    margin-bottom: 0.4rem;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.support-inbox-thread-item a {
+    display: block;
+    padding: 0.4rem 0.45rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.support-inbox-thread-item:hover {
+    background-color: #f2f6ff;
+}
+
+.support-inbox-thread-item.active {
+    background-color: #e0f0ff;
+}
+
+.support-inbox-thread-user {
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.support-inbox-thread-user .email {
+    font-weight: normal;
+    color: #666;
+    font-size: 0.8em;
+}
+
+.support-inbox-thread-last {
+    font-size: 0.85em;
+    color: #444;
+    margin-top: 0.15rem;
+}
+
+.support-inbox-thread-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.15rem;
+    font-size: 0.75em;
+    color: #777;
+}
+
+.support-inbox-thread-meta .status.open {
+    color: #0a7bff;
+}
+
+.support-inbox-thread-meta .status.closed {
+    color: #777;
+}
+
+/* Правая колонка: чат */
+
+.support-inbox-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.status-pill {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75em;
+    border: 1px solid transparent;
+}
+
+.status-pill.open {
+    background-color: #e0f0ff;
+    border-color: #0a7bff;
+    color: #0a7bff;
+}
+
+.status-pill.closed {
+    background-color: #eee;
+    border-color: #aaa;
+    color: #555;
+}
+
+.support-inbox-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.3rem;
+    margin-bottom: 0.4rem;
+}
+
+/* Пузыри сообщений */
+
+.chat-message-line {
+    margin-bottom: 0.35rem;
+    display: flex;
+}
+
+.chat-message-line.from-user {
+    justify-content: flex-start;
+}
+
+.chat-message-line.from-admin {
+    justify-content: flex-end;
+}
+
+.chat-bubble {
+    max-width: 75%;
+    border-radius: 12px;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.9em;
+    background-color: #f1f1f1;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.chat-message-line.from-admin .chat-bubble {
+    background-color: #e0f0ff;
+}
+
+.chat-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.15rem;
+    font-size: 0.75em;
+    color: #666;
+}
+
+.chat-text {
+    white-space: pre-wrap;
+}
+
+/* Форма */
+
+.support-inbox-chat-form {
+    border-top: 1px solid #ddd;
+    padding-top: 0.4rem;
+}
+
+.support-inbox-chat-form .form-row textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.support-inbox-chat-form .form-actions {
+    margin-top: 0.25rem;
+    text-align: right;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if page and page.seo_title %}
+    {{ page.seo_title }} – Aquento
+{% elif page %}
+    {{ page.title }} – Aquento
+{% else %}
+    Instructions – Aquento
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+{% if page and page.seo_description %}
+<meta name="description" content="{{ page.seo_description }}">
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <h1 class="mb-4">
+        {% if page %}
+            {{ page.title }}
+        {% else %}
+            Instructions
+        {% endif %}
+    </h1>
+
+    {% if page and page.content %}
+    <div class="mb-4">
+        {{ page.content|linebreaks }}
+    </div>
+    {% endif %}
+
+    {% if products %}
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-6">
+            <select name="product" class="form-select" onchange="this.form.submit()">
+                <option value="">All products</option>
+                {% for p in products %}
+                <option value="{{ p.id }}"
+                        {% if p.id|stringformat:'s' == selected_product_id %}selected{% endif %}>
+                    {{ p.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    {% endif %}
+
+    {% if instructions %}
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Product</th>
+                <th>Instruction</th>
+                <th>Download</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for instr in instructions %}
+            <tr>
+                <td>{{ instr.product.name }}</td>
+                <td>{{ instr.title }}</td>
+                <td>
+                    {% if instr.pdf_file %}
+                    <a href="{{ instr.pdf_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        PDF
+                    </a>
+                    {% else %}
+                    –
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>No instructions available yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
