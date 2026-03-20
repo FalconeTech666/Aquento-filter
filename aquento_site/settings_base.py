@@ -64,10 +64,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = '/var/www/aquento/static'
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/var/www/aquento/media'
+
+ALLOWED_HOSTS = ['62.182.102.118', 'localhost', '127.0.0.1']
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
