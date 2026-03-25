@@ -7,14 +7,16 @@
 {% if slides %}
 <section class="home-slider-section">
     <div class="container">
-        <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="home-slider-card">
-                <div class="carousel-inner">
+        <div class="home-slider-card">
+
+            <div class="swiper hero-swiper">
+                <div class="swiper-wrapper">
+
                     {% for slide in slides %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="swiper-slide">
                         <div class="row align-items-center">
                             <div class="col-lg-6">
-                                <div class="home-slider-text home-slider-animated">
+                                <div class="home-slider-text">
                                     {% if slide.badge_text %}
                                     <div class="home-slider-badge">
                                         {{ slide.badge_text }}
@@ -67,6 +69,7 @@
                                     {% endif %}
                                 </div>
                             </div>
+
                             <div class="col-lg-6 d-none d-md-flex justify-content-end">
                                 <div class="home-slider-image-wrapper">
                                     {% if slide.image %}
@@ -79,26 +82,12 @@
                         </div>
                     </div>
                     {% endfor %}
+
                 </div>
 
-                <button class="home-slider-control prev" type="button"
-                        data-bs-target="#homeCarousel" data-bs-slide="prev">
-                    <span class="home-slider-arrow">&larr;</span>
-                </button>
-                <button class="home-slider-control next" type="button"
-                        data-bs-target="#homeCarousel" data-bs-slide="next">
-                    <span class="home-slider-arrow">&rarr;</span>
-                </button>
+                <div class="swiper-pagination home-swiper-pagination"></div>
             </div>
 
-            <div class="home-slider-indicators">
-                {% for slide in slides %}
-                <button type="button"
-                        data-bs-target="#homeCarousel"
-                        data-bs-slide-to="{{ forloop.counter0 }}"
-                        class="{% if forloop.first %}active{% endif %}"></button>
-                {% endfor %}
-            </div>
         </div>
     </div>
 </section>
@@ -200,4 +189,23 @@
 </section>
 {% endif %}
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const heroSwiper = new Swiper('.hero-swiper', {
+    loop: true,
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
+    speed: 600,
+    autoplay: {
+      delay: 7000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.home-swiper-pagination',
+      clickable: true,
+    },
+  });
+</script>
 {% endblock %}

@@ -97,6 +97,47 @@ body.scrolled .navbar-aquento {
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
+/* Кнопка‑бургер */
+.navbar-aquento .navbar-toggler {
+    border: none;
+    padding: 0.15rem 0.35rem;
+}
+
+.navbar-aquento .navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.navbar-aquento .navbar-toggler-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-image: none;
+    position: relative;
+    display: inline-block;
+}
+
+.navbar-aquento .navbar-toggler-icon::before,
+.navbar-aquento .navbar-toggler-icon::after,
+.navbar-aquento .navbar-toggler-icon span {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: 999px;
+    background-color: #0f172a;
+}
+
+.navbar-aquento .navbar-toggler-icon::before {
+    top: 4px;
+}
+.navbar-aquento .navbar-toggler-icon::after {
+    bottom: 4px;
+}
+.navbar-aquento .navbar-toggler-icon span {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 /* =========================
    2. Основной контент и футер
    ========================= */
@@ -139,18 +180,19 @@ footer p {
     border-color: var(--aquento-accent);
     color: #fff;
     border-radius: 999px;
-    padding-inline: 1.7rem;
-    padding-block: 0.65rem;
+    padding-inline: 1.9rem;
+    padding-block: 0.7rem;
     font-weight: 600;
     font-size: 0.98rem;
     transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease;
+    box-shadow: 0 10px 24px rgba(249, 115, 22, 0.28);
 }
 
 .btn-aquento:hover {
     background-color: #ff8a00;
     border-color: #ff8a00;
     color: #fff;
-    box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+    box-shadow: 0 14px 32px rgba(249, 115, 22, 0.4);
     transform: translateY(-1px);
 }
 
@@ -181,6 +223,18 @@ footer p {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Кнопка в слайдере — полностью кликабельная */
+.home-slider-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 2.1rem;
+    padding-block: 0.75rem;
+    border-radius: 999px;
+    position: relative;
+    overflow: visible;
 }
 
 /* Ссылки внутри контента */
@@ -228,9 +282,14 @@ footer p {
 
 .home-slider-card {
     position: relative;
-    background: radial-gradient(circle at top right, #e7f1ff 0, #edf2ff 40%, #ffffff 100%);
+    background: linear-gradient(
+        to right,
+        #e7f1ff 0%,
+        #edf2ff 40%,
+        #ffffff 80%
+    );
     border-radius: 24px;
-    padding: 2.1rem 3.4rem 2.3rem 3.4rem;  /* плотнее и с запасом слева под стрелку */
+    padding: 2.1rem 3.4rem 2.3rem 3.4rem;
     box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
     overflow: hidden;
 }
@@ -238,7 +297,7 @@ footer p {
 .home-slider-text {
     max-width: 540px;
     color: var(--aquento-text-main);
-    margin-left: 0.5rem; /* чуть вправо от стрелки */
+    animation: homeSlideFadeInLeft 0.55s ease-out both;
 }
 
 .home-slider-badge {
@@ -295,40 +354,21 @@ footer p {
     background-color: var(--aquento-blue);
 }
 
-.home-slider-btn {
-    padding-inline: 1.9rem;
-}
-
-/* Картинка продукта справа: без рамки, без явной тени */
-.home-slider-card {
-    position: relative;
-    background: linear-gradient(
-        to right,
-        #e7f1ff 0%,
-        #edf2ff 40%,
-        #ffffff 80%
-    );
-    border-radius: 24px;
-    padding: 2.1rem 3.4rem 2.3rem 3.4rem;
-    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
-    overflow: hidden; /* важно для маски */
-}
-
-/* враппер для картинки */
+/* Картинка продукта справа и маска */
 .home-slider-image-wrapper {
     position: relative;
     display: flex;
     justify-content: flex-end;
 }
 
-/* картинка как есть */
 .home-slider-image {
     max-height: 320px;
     width: auto;
+    object-fit: contain;
+    object-position: center;
     display: block;
 }
 
-/* мягкая «маска» по краям картинки */
 .home-slider-image-wrapper::before {
     content: "";
     position: absolute;
@@ -342,51 +382,39 @@ footer p {
     pointer-events: none;
 }
 
-/* Анимация текста */
+/* Анимация появления текста */
 @keyframes homeSlideFadeInLeft {
     0% { opacity: 0; transform: translateX(-18px); }
     100% { opacity: 1; transform: translateX(0); }
 }
 
-.home-slider-animated {
-    animation: homeSlideFadeInLeft 0.55s ease-out both;
+/* Swiper контейнер */
+.hero-swiper {
+    width: 100%;
 }
 
-.home-slider-section .home-slider-control {
-    display: none !important;
+.hero-swiper .swiper-slide {
+    height: 100%;
 }
 
-
-/* Индикаторы */
-.home-slider-indicators {
-    display: flex;
-    justify-content: center;
-    gap: 0.45rem;
-    margin-top: 0.9rem;
+/* Точки Swiper */
+.home-swiper-pagination {
+    margin-top: 16px;
+    text-align: center;
 }
 
-.home-slider-indicators button {
+.home-swiper-pagination .swiper-pagination-bullet {
     width: 7px;
     height: 7px;
     border-radius: 999px;
-    border: none;
-    background-color: rgba(148, 163, 184, 0.6);
-    transition: background-color 0.18s ease, width 0.18s ease;
-}
-
-.home-slider-indicators button.active {
-    background-color: var(--aquento-blue);
-    width: 20px;
-}
-
-/* Плавный переход слайдов (Bootstrap) */
-.home-slider-section .carousel-item {
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.home-slider-section .carousel-item.active {
+    background: #cbd5ff;
     opacity: 1;
-    transform: translateX(0);
+    transition: background-color 0.2s ease, width 0.2s ease;
+}
+
+.home-swiper-pagination .swiper-pagination-bullet-active {
+    background: #2f5bff;
+    width: 18px;
 }
 
 /* Intro‑секция после слайдера */
@@ -547,17 +575,26 @@ section {
    ========================= */
 
 .product-card-img,
+.product-card-img,
 .production-card-img {
+    width: 100%;
     height: 220px;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
+    display: block;
+    background-color: #ffffff;
+    padding: 0.75rem;
 }
 
-.product-main-img {
-    height: 320px;
-    object-fit: cover;
-    object-position: center;
+.product-card-img,
+.production-card-img {
     width: 100%;
+    height: 260px;          /* единая высота под все превью */
+    object-fit: contain;    /* продукт всегда целиком */
+    object-position: center center;
+    display: block;
+    background-color: #ffffff;
+    padding: 1.2rem;        /* одинаковый отступ вокруг объекта */
 }
 
 .card {
@@ -789,51 +826,4 @@ section {
     .home-intro-title {
         font-size: 2rem;
     }
-}
-
-/* глушим встроенные иконки Bootstrap у этой карусели */
-.home-slider-section .carousel-control-prev-icon,
-.home-slider-section .carousel-control-next-icon {
-    display: none;
-    background-image: none;
-}
-
-.navbar-aquento .navbar-toggler {
-    border: none;
-    padding: 0.15rem 0.35rem;
-}
-
-.navbar-aquento .navbar-toggler:focus {
-    box-shadow: none;
-}
-
-.navbar-aquento .navbar-toggler-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    background-image: none;
-    position: relative;
-    display: inline-block;
-}
-
-.navbar-aquento .navbar-toggler-icon::before,
-.navbar-aquento .navbar-toggler-icon::after,
-.navbar-aquento .navbar-toggler-icon span {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 2px;
-    border-radius: 999px;
-    background-color: #0f172a;
-}
-
-.navbar-aquento .navbar-toggler-icon::before {
-    top: 4px;
-}
-.navbar-aquento .navbar-toggler-icon::after {
-    bottom: 4px;
-}
-.navbar-aquento .navbar-toggler-icon span {
-    top: 50%;
-    transform: translateY(-50%);
 }
